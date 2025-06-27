@@ -3,16 +3,18 @@ import java.util.*;
 
 public class BST {
     public static class Node {
-        int key;
-        Node izq;
-        Node der;
-        String value;
+        int key; // cantidad de victorias
+        ArrayList<String> jugadores; // nombres de jugadores con esas victorias
+        Node izq, der;
 
-        public Node(int key,String value) {
+        public Node(int key) {
+            this.key = key;
+            this.jugadores = new ArrayList<>(); // Aquí creas la lista vacía
             this.izq = null;
             this.der = null;
-            this.key = key;
         }
+
+
     }
     static Node getSuccessor(Node curr) {
         curr = curr.der;
@@ -21,47 +23,57 @@ public class BST {
         }
         return curr;
     }
-    static Node delNode(Node root, int x) {
 
-        // Base case
-        if (root == null) {
+    static Node delNode(Node root, int x) {
+       if (root == null) {
             return root;
         }
-
-        // If key to be searched is in a subtree
         if (root.key > x) {
             root.izq = delNode(root.izq, x);
         } else if (root.key < x) {
             root.der = delNode(root.der, x);
         } else {
-            // If root matches with the given key
-
-            // Cases when root has 0 children or
-            // only right child
             if (root.izq == null) {
                 return root.der;
             }
-
-            // When root has only left child
             if (root.der == null) {
                 return root.izq;
             }
-
-            // When both children are present
             Node succ = getSuccessor(root);
             root.key = succ.key;
             root.der = delNode(root.der, succ.key);
         }
         return root;
     }
+    public static Node removeJugador(Node root, int key, String nombre) {
+        if (root == null) return null;
 
-    public static Node push(Node root, int key, String value) {
-        if (root == null) {
-            root = new Node(key,value);
-        } else if (key <= root.key) {
-            root.izq = push(root.izq, key, value);
+        if (key < root.key) {
+            root.izq = removeJugador(root.izq, key, nombre);
+        } else if (key > root.key) {
+            root.der = removeJugador(root.der, key, nombre);
         } else {
-            root.der = push(root.der, key, value);
+            root.jugadores.remove(nombre);
+            if (root.jugadores.isEmpty()) {
+                return delNode(root, key); // elimina el nodo completo
+            }
+        }
+        return root;
+    }
+
+    public static Node push(Node root, int key, String nombre) {
+        if (root == null) {
+            Node nuevo = new Node(key);
+            nuevo.jugadores = new ArrayList<>();
+            nuevo.jugadores.add(nombre);
+            return nuevo;
+        } else if (key == root.key) {
+            if (!root.jugadores.contains(nombre))
+                root.jugadores.add(nombre);
+        } else if (key < root.key) {
+            root.izq = push(root.izq, key, nombre);
+        } else {
+            root.der = push(root.der, key, nombre);
         }
         return root;
     }
@@ -89,4 +101,23 @@ public class BST {
             System.out.print(root.key + " ");
         }
     }
+    public static void winRange(Node root, int lo, int hi, ArrayList<String> resultado) {
+        if (root == null) return;
+
+        // Recorrer el subárbol izquierdo si puede haber claves dentro del rango
+        if (root.key > lo) {
+            winRange(root.izq, lo, hi, resultado);
+        }
+
+        // Si la clave está dentro del rango, agregar los jugadores
+        if (root.key >= lo && root.key <= hi) {
+            resultado.addAll(root.jugadores);
+        }
+
+        // Recorrer el subárbol derecho si puede haber claves dentro del rango
+        if (root.key < hi) {
+            winRange(root.der, lo, hi, resultado);
+        }
+    }
+
 }
