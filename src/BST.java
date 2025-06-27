@@ -14,6 +14,46 @@ public class BST {
             this.key = key;
         }
     }
+    static Node getSuccessor(Node curr) {
+        curr = curr.der;
+        while (curr != null && curr.izq != null) {
+            curr = curr.izq;
+        }
+        return curr;
+    }
+    static Node delNode(Node root, int x) {
+
+        // Base case
+        if (root == null) {
+            return root;
+        }
+
+        // If key to be searched is in a subtree
+        if (root.key > x) {
+            root.izq = delNode(root.izq, x);
+        } else if (root.key < x) {
+            root.der = delNode(root.der, x);
+        } else {
+            // If root matches with the given key
+
+            // Cases when root has 0 children or
+            // only right child
+            if (root.izq == null) {
+                return root.der;
+            }
+
+            // When root has only left child
+            if (root.der == null) {
+                return root.izq;
+            }
+
+            // When both children are present
+            Node succ = getSuccessor(root);
+            root.key = succ.key;
+            root.der = delNode(root.der, succ.key);
+        }
+        return root;
+    }
 
     public static Node push(Node root, int key, String value) {
         if (root == null) {
