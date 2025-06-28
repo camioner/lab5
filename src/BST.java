@@ -2,6 +2,8 @@ import java.io.*;
 import java.util.*;
 
 public class BST {
+    public Node root;
+
     public static class Node {
         int key; // cantidad de victorias
         ArrayList<String> jugadores; // nombres de jugadores con esas victorias
@@ -22,6 +24,18 @@ public class BST {
             curr = curr.izq;
         }
         return curr;
+    }
+    public static Node successor(Node root, int wins) {
+        Node succ = null;
+        while (root != null) {
+            if (wins < root.key) {
+                succ = root;        // candidato a sucesor
+                root = root.izq;    // busca más pequeño
+            } else {
+                root = root.der;    // salta a mayores
+            }
+        }
+        return succ;
     }
 
     static Node delNode(Node root, int x) {
@@ -64,7 +78,6 @@ public class BST {
     public static Node push(Node root, int key, String nombre) {
         if (root == null) {
             Node nuevo = new Node(key);
-            nuevo.jugadores = new ArrayList<>();
             nuevo.jugadores.add(nombre);
             return nuevo;
         } else if (key == root.key) {

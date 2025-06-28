@@ -25,7 +25,7 @@ public class Jugador {
 
     public double WinRate() {
         int total = victoria + perdidas + empates;
-        WinRate = ((double) victoria / total);
+        WinRate = victoria / total;
         return WinRate;
     }
 

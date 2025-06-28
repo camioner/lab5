@@ -1,13 +1,15 @@
+import java.util.ArrayList;
+
 public class hash {
 
     private int M = 1024;
-    private HashNode[] st = new HashNode[M];
+    public HashNode[] st = new HashNode[M];
 
     // Clase interna para representar cada nodo de la tabla
-    private static class HashNode {
-        private String nombre;   // la clave
-        private Object jugador;  // el valor asociado
-        private HashNode next;
+    public static class HashNode {
+        public String nombre;   // la clave
+        public Object jugador;  // el valor asociado
+        public HashNode next;
 
         public HashNode(String nombre, Object jugador, HashNode next) {
             this.nombre = nombre;
@@ -15,6 +17,10 @@ public class hash {
             this.next = next;
         }
     }
+    public HashNode[] getTable() {
+        return st;
+    }
+
 
     // Función hash para claves tipo String
     private int hash(String nombre) {
@@ -65,4 +71,15 @@ public class hash {
             prev = x;
         }
     }
+    public ArrayList<Jugador> getJugadores() {
+        ArrayList<Jugador> lista = new ArrayList<>();
+        for (int i = 0; i < M; i++) {
+            for (HashNode x = st[i]; x != null; x = x.next) {
+                lista.add((Jugador) x.jugador);
+            }
+        }
+        return lista;
+    }
+
+
 }

@@ -1,3 +1,7 @@
+import java.io.*;
+import java.util.*;
+
+
 public class Scoreboard {
     BST wintree = new BST();//llave de int que es el numero de victorioas y valos es string con nombre del jugador
     hash players = new hash();    //asocia el nombre con con su instancia de objeto jugador ,
@@ -46,8 +50,18 @@ public class Scoreboard {
             players.add(playername, j);
 
         }
-        ///
     }
+    public Jugador[] winSuccessor(int wins) {
+        BST.Node nodo = BST.successor(wintree.root, wins);
+        if (nodo == null) return new Jugador[0];
+
+        Jugador[] jugadores = new Jugador[nodo.jugadores.size()];
+        for (int i = 0; i < nodo.jugadores.size(); i++) {
+            jugadores[i] = (Jugador) players.get(nodo.jugadores.get(i));
+        }
+        return jugadores;
+    }
+
 
     public boolean check4player(String playername) {
         return players.contains(playername);
@@ -56,17 +70,17 @@ public class Scoreboard {
     public void guardarDatos() {
         try (PrintWriter writer = new PrintWriter(new FileWriter("jugadores.txt"))) {
             writer.println("playedGames=" + playedgames);
-            for (int i = 0; i < 1024; i++) {
-                for (Object nodoObj = players.st[i]; nodoObj != null; nodoObj = ((hash.HashNode) nodoObj).next) {
-                    hash.HashNode nodo = (hash.HashNode) nodoObj;
-                    Jugador j = (Jugador) nodo.jugador;
-                    writer.println(j.nombre + "," + j.victoria + "," + j.empates + "," + j.perdidas);
-                }
+
+            ArrayList<Jugador> lista = players.getJugadores();
+            for (Jugador j : lista) {
+                writer.println(j.nombre + "," + j.victoria + "," + j.empates + "," + j.perdidas);
             }
+
         } catch (IOException e) {
             System.out.println("Error al guardar los datos: " + e.getMessage());
         }
     }
+
 
     public void cargarDatos() {
         try (BufferedReader reader = new BufferedReader(new FileReader("jugadores.txt"))) {
