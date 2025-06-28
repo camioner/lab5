@@ -1,0 +1,4 @@
+playedGames=2
+pablo,0,0,1
+anais,0,0,1
+cristian,2,0,0
