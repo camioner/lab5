@@ -37,4 +37,52 @@ public class ConnectFour {
 
         return false;
     }
+    public String isGameOver(int fila, int col) {
+        char symbol = grid[fila][col];
+        if (symbol == ' ') return "";
+
+        // Horizontal ← →
+        String line = buildLine(fila, col, 0, -1) + symbol + buildLine(fila, col, 0, 1);
+        if (line.contains(repeat(symbol, 4))) return String.valueOf(symbol);
+
+        // Vertical ↓ (solo hacia abajo es suficiente)
+        line = symbol + buildLine(fila, col, 1, 0);
+        if (line.contains(repeat(symbol, 4))) return String.valueOf(symbol);
+
+        // Diagonal ↘ (↖ y ↘)
+        line = buildLine(fila, col, -1, -1) + symbol + buildLine(fila, col, 1, 1);
+        if (line.contains(repeat(symbol, 4))) return String.valueOf(symbol);
+
+        // Diagonal ↙ (↗ y ↙)
+        line = buildLine(fila, col, -1, 1) + symbol + buildLine(fila, col, 1, -1);
+        if (line.contains(repeat(symbol, 4))) return String.valueOf(symbol);
+
+        for (int c = 0; c < 6; c++) {
+            if (grid[0][c] == ' ') {
+                return ""; // aún hay espacios: no hay empate
+            }
+        }
+        return "DRAW"; // si terminó el for, entonces está lleno
+    }
+    private String buildLine(int fila, int col, int dFila, int dCol) {
+        StringBuilder sb = new StringBuilder();
+        int f = fila + dFila;
+        int c = col + dCol;
+
+        while (f >= 0 && f < 7 && c >= 0 && c < 6) {
+            sb.append(grid[f][c]);
+            f += dFila;
+            c += dCol;
+        }
+
+        return sb.toString();
+    }
+    private String repeat(char c, int times) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < times; i++) sb.append(c);
+        return sb.toString();
+    }
+
+
+
 }

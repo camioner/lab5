@@ -11,7 +11,7 @@ public class BST {
 
         public Node(int key) {
             this.key = key;
-            this.jugadores = new ArrayList<>(); // Aquí creas la lista vacía
+            this.jugadores = new ArrayList<>(); // Aquí se crea la lista vacía
             this.izq = null;
             this.der = null;
         }
@@ -39,7 +39,7 @@ public class BST {
     }
 
     static Node delNode(Node root, int x) {
-       if (root == null) {
+        if (root == null) {
             return root;
         }
         if (root.key > x) {
@@ -55,10 +55,12 @@ public class BST {
             }
             Node succ = getSuccessor(root);
             root.key = succ.key;
+            root.jugadores = new ArrayList<>(succ.jugadores); // Copiar lista jugadores
             root.der = delNode(root.der, succ.key);
         }
         return root;
     }
+
     public static Node removeJugador(Node root, int key, String nombre) {
         if (root == null) return null;
 
